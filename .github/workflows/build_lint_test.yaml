@@ -2,15 +2,20 @@ name: cli-commander-fake-names-generator
 
 on:
   push:
-    paths:
-      - '**'
+    branches: ['main']
   pull_request:
-    paths:
-      - '**'
+    branches: ['main']
   schedule:
     - cron:  '0 1 * * *'
 
 jobs:
+  lintandtest:
+    uses: ./.github/workflows/lint_and_test.yaml
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        node-version: [16.x, 18.x, 20.x]
+        
   build:
     runs-on: self-hosted
     strategy:
@@ -29,6 +34,7 @@ jobs:
       - name: npm install
         run: npm install
       - name: npm run build
+        working-directory: .
         run: npm run build
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -37,27 +43,6 @@ jobs:
           path: |
             dist/
             build/
-  lintandtest:
-    runs-on: self-hosted
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-        node-version: [16.x, 18.x, 20.x]
-    env:
-      CI: true
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }} on ${{ matrix.os }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - name: npm install
-        run: npm install
-      - name: npm run lint
-        run: npm run lint
-      - name: npm run test
-        run: npm run test
-      
+  
 
   

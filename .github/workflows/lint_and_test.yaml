@@ -1,0 +1,31 @@
+name: Lint and Test
+ 
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        required: false
+        default: '18'
+        type: string
+      os-version:
+        required: false
+        default: '18'
+        type: string
+      working-directory:
+        required: false
+        default: '.'
+        type: string
+ 
+jobs:
+  lint-and-test:
+    runs-on: ${{ inputs['os-version'] }}
+ 
+    steps:
+ 
+      - name: Run lint
+        working-directory: ${{ inputs['working-directory'] }}
+        run: npm run lint
+ 
+      - name: Run tests
+        working-directory: ${{ inputs['working-directory'] }}
+        run: npm test
