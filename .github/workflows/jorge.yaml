@@ -8,11 +8,10 @@ on:
     paths:
       - '**'
   schedule:
-    # Every day at 1am
     - cron:  '0 1 * * *'
 
 jobs:
-  build:
+  test:
     runs-on: self-hosted
     strategy:
       matrix:
@@ -21,14 +20,31 @@ jobs:
     env:
       CI: true
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }} on ${{ matrix.os }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: npm install
-      run: npm install
-      working-directory: '.'
-    - name: npm run test
-      run: npm run test
-      working-directory: '.'
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }} on ${{ matrix.os }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm install
+        run: npm install
+      - name: npm run test
+        run: npm run test
+
+  lint:
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        node-version: [16.x, 18.x, 20.x]
+    env:
+      CI: true
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }} on ${{ matrix.os }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: npm install
+        run: npm install
+      - name: npm run lint
+        run: npm run lint
