@@ -9,7 +9,7 @@ program
   .version(packageJSON.version)
   .description(packageJSON.description)
   .usage('<option>')
-  .option('-n, --nameType <option>','name', 'fullName')
+  .option('-n, --nameType <option>', 'name', 'fullName')
   .option('-t, --times <option>', 'number of times', 1)
   .option('-i --info', 'info', false)
   .option('-s --save', 'save as json', false)
